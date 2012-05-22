@@ -18,19 +18,27 @@ package org.zkybase.kite.samples.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 import org.zkybase.kite.GuardedBy;
 import org.zkybase.kite.samples.model.Message;
 import org.zkybase.kite.samples.service.MessageService;
-import org.zkybase.kite.samples.util.Flakinator;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  * @since 1.0
  */
 @Service
+@ManagedResource
 public class MessageServiceImpl implements MessageService {
-	private Flakinator flakinator = new Flakinator();
+	private boolean up = true;
+	
+	@ManagedOperation
+	public void up() { this.up = true; }
+	
+	@ManagedOperation
+	public void down() { this.up = false; }
 
 	/* (non-Javadoc)
 	 * @see org.zkybase.kite.samples.service.MessageService#getMotd()
@@ -42,7 +50,7 @@ public class MessageServiceImpl implements MessageService {
 		"messageServiceBreaker"
 	})
 	public Message getMotd() {
-		flakinator.simulateFlakiness();
+		if (!up) { throw new RuntimeException("Service down"); }
 		return createMessage("<p>Welcome to Aggro's Towne!</p>");
 	}
 
@@ -56,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
 		"messageServiceBreaker"
 	})
 	public List<Message> getImportantMessages() {
-		flakinator.simulateFlakiness();
+		if (!up) { throw new RuntimeException("Service down"); }
 		List<Message> messages = new ArrayList<Message>();
 		messages.add(createMessage("<p>Important message 1</p>"));
 		messages.add(createMessage("<p>Important message 2</p>"));

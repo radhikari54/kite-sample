@@ -18,26 +18,34 @@ package org.zkybase.kite.samples.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 import org.zkybase.kite.GuardedBy;
 import org.zkybase.kite.samples.model.User;
 import org.zkybase.kite.samples.service.UserService;
-import org.zkybase.kite.samples.util.Flakinator;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  * @since 1.0
  */
 @Service
+@ManagedResource
 public class UserServiceImpl implements UserService {
-	private Flakinator flakinator = new Flakinator();
+	private boolean up = true;
+	
+	@ManagedOperation
+	public void up() { this.up = true; }
+	
+	@ManagedOperation
+	public void down() { this.up = false; }
 
 	/* (non-Javadoc)
 	 * @see org.zkybase.kite.samples.service.UserService#getRecentUsers()
 	 */
 	@GuardedBy({ "rateLimitingThrottle", "userServiceBreaker" })
 	public List<User> getRecentUsers() {
-		flakinator.simulateFlakiness();
+		if (!up) { throw new RuntimeException("Service down"); }
 		
 		List<User> users = new ArrayList<User>();
 		users.add(createUser("aggro_the_axe"));
