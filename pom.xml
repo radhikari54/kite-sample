@@ -13,7 +13,7 @@
 	
 	<groupId>org.zkybase</groupId>
 	<artifactId>kite-sample</artifactId>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	
 	<name>Kite Sample</name>
@@ -56,7 +56,7 @@
 		<inject.version>1</inject.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.10</junit.version>
-		<kite.version>0.5.0-SNAPSHOT</kite.version>
+		<kite.version>1.0.0-SNAPSHOT</kite.version>
 		<mockito.version>1.9.0</mockito.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<spring.security.version>3.1.0.RELEASE</spring.security.version>
